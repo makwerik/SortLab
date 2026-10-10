@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+             http://maven.apache.org/POM/4.0.0
+             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Версия формата конфигурации Maven -->
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Идентификатор разработчика -->
+    <groupId>ru.sortlab</groupId>
+
+    <!-- Название приложения -->
+    <artifactId>sortlab</artifactId>
+
+    <!-- Версия приложения -->
+    <version>1.0</version>
+
+    <!-- Настройки проекта -->
+    <properties>
+
+        <!-- Используем Java 27 -->
+        <maven.compiler.release>27</maven.compiler.release>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Версия JavaFX -->
+        <javafx.version>21.0.6</javafx.version>
+
+    </properties>
+
+    <!--
+        dependencies — зависимости проекта.
+    -->
+    <dependencies>
+
+        <!--
+            JavaFX Controls.
+
+            Библиотека для создания графического интерфейса.
+        -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+        <!--
+            JavaFX FXML.
+
+            Позволяет описывать интерфейс
+            в отдельных XML-файлах.
+        -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <!-- Настройки сборки проекта -->
+    <build>
+
+        <plugins>
+
+            <!-- Компиляция Java-кода -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+
+                <configuration>
+                    <release>27</release>
+                </configuration>
+            </plugin>
+
+            <!-- Плагин для запуска JavaFX -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+
+                <configuration>
+                    <mainClass>ru.sortlab.SortLabApplication</mainClass>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>
