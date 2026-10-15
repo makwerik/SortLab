@@ -2,6 +2,8 @@ package ru.sortlab.collection;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 
 /**
@@ -181,6 +183,25 @@ public class CustomArrayList<T> implements Iterable<T>{
                 return get(cursor++);
             }
         };
+    }
+
+
+    /**
+     * Преобразует коллекцию в Stream.
+     * Не превращает CustomArrayList
+     * в стандартный ArrayList.
+     *
+     * StreamSupport использует механизм
+     * перебора элементов нашей коллекции.
+     *
+     * spliterator() доступен благодаря
+     * интерфейсу Iterable<T>.
+     *
+     * false означает последовательный Stream,
+     * а не параллельный.
+     */
+    public Stream<T> stream(){
+        return StreamSupport.stream(this.spliterator(), false);
     }
 
 }
