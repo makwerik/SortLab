@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<!--
+    BorderPane — контейнер с пятью областями:
+
+    top
+    bottom
+    left
+    right
+    center
+
+    Мы используем:
+    top    — заголовок и панель управления
+    center — таблица автомобилей
+    bottom — строка состояния
+-->
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="ru.sortlab.controller.MainController"
+            styleClass="root-container">
+
+    <!-- Верхняя часть окна -->
+    <top>
+        <VBox spacing="18" styleClass="top-panel">
+
+            <!-- Заголовок приложения -->
+            <VBox spacing="4">
+                <Label text="SortLab"
+                       styleClass="app-title"/>
+
+                <Label text="Визуализатор алгоритмов сортировки"
+                       styleClass="app-subtitle"/>
+            </VBox>
+
+            <!-- Панель управления -->
+            <VBox spacing="14" styleClass="control-panel">
+
+                <!-- Выбор алгоритма и поля -->
+                <HBox spacing="12">
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+
+                        <Label text="Алгоритм сортировки"
+                               styleClass="field-label"/>
+
+                        <ComboBox fx:id="algorithmComboBox"
+                                  maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS">
+
+                        <Label text="Поле сортировки"
+                               styleClass="field-label"/>
+
+                        <ComboBox fx:id="fieldComboBox"
+                                  maxWidth="Infinity"/>
+                    </VBox>
+
+                    <VBox spacing="6">
+
+                        <Label text="Количество"
+                               styleClass="field-label"/>
+
+                        <TextField fx:id="countTextField"
+                                   text="10"
+                                   prefWidth="100"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Кнопки -->
+                <HBox spacing="10">
+
+                    <Button text="Сгенерировать"
+                            onAction="#handleGenerate"
+                            styleClass="secondary-button"/>
+
+                    <Button text="Загрузить CSV/TXT"
+                            onAction="#handleLoadFile"
+                            styleClass="secondary-button"/>
+
+                    <Button text="Добавить автомобиль"
+                            onAction="#handleAddCar"
+                            styleClass="secondary-button"/>
+
+                    <Button text="Сортировать"
+                            onAction="#handleSort"
+                            styleClass="primary-button"/>
+
+                    <Button text="Сохранить"
+                            onAction="#handleSave"
+                            styleClass="secondary-button"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </top>
+
+    <!-- Центральная часть -->
+    <center>
+        <VBox spacing="12" styleClass="content-panel">
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+
+                <Label text="Список автомобилей"
+                       styleClass="section-title"/>
+
+                <Label fx:id="countLabel"
+                       text="0 элементов"
+                       styleClass="count-label"/>
+            </HBox>
+
+            <!--
+                TableView — таблица JavaFX.
+
+                Каждая TableColumn отображает
+                отдельное поле объекта Car.
+            -->
+
+            <TableView fx:id="carTable"
+                       VBox.vgrow="ALWAYS">
+
+                <placeholder>
+                    <Label text="Автомобили пока не загружены"/>
+                </placeholder>
+
+                <columns>
+                    <TableColumn fx:id="modelColumn"
+                                 text="Модель"
+                                 prefWidth="350"/>
+
+                    <TableColumn fx:id="powerColumn"
+                                 text="Мощность (л.с.)"
+                                 prefWidth="220"/>
+
+                    <TableColumn fx:id="yearColumn"
+                                 text="Год выпуска"
+                                 prefWidth="180"/>
+                </columns>
+
+            </TableView>
+        </VBox>
+    </center>
+
+    <!-- Нижняя строка состояния -->
+    <bottom>
+        <HBox styleClass="status-bar"
+              alignment="CENTER_LEFT">
+
+            <Label fx:id="statusLabel"
+                   text="Приложение готово к работе"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

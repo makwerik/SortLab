@@ -1,0 +1,216 @@
+
+/*
+ * Общий фон приложения.
+ */
+.root-container {
+    -fx-background-color: #111827;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+/*
+ * Верхняя панель.
+ */
+.top-panel {
+    -fx-padding: 24;
+    -fx-background-color: #111827;
+}
+
+/*
+ * Заголовок.
+ */
+.app-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+}
+
+/*
+ * Подзаголовок.
+ */
+.app-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #94a3b8;
+}
+
+/*
+ * Панель управления.
+ */
+.control-panel {
+    -fx-padding: 18;
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12;
+}
+
+/*
+ * Подписи полей.
+ */
+.field-label {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 12px;
+}
+
+/*
+ * Поля ввода и выпадающие списки.
+ */
+.text-field,
+.combo-box {
+    -fx-background-color: #334155;
+    -fx-background-radius: 7;
+    -fx-text-fill: #f8fafc;
+    -fx-pref-height: 36;
+}
+
+/*
+ * Текст выбранного элемента ComboBox.
+ */
+.combo-box .list-cell {
+    -fx-text-fill: #f8fafc;
+    -fx-background-color: #334155;
+}
+
+/*
+ * Выпадающий список.
+ */
+.combo-box-popup .list-view {
+    -fx-background-color: #334155;
+}
+
+/*
+ * Подсветка выбранного элемента.
+ */
+.combo-box-popup .list-cell:hover,
+.combo-box-popup .list-cell:filled:selected {
+    -fx-background-color: #0284c7;
+}
+
+/*
+ * Общие стили кнопок.
+ */
+.button {
+    -fx-cursor: hand;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 10 15;
+    -fx-background-radius: 7;
+}
+
+/*
+ * Главная кнопка.
+ */
+.primary-button {
+    -fx-background-color: #0284c7;
+    -fx-text-fill: white;
+}
+
+.primary-button:hover {
+    -fx-background-color: #0369a1;
+}
+
+/*
+ * Второстепенные кнопки.
+ */
+.secondary-button {
+    -fx-background-color: #334155;
+    -fx-text-fill: #f8fafc;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #475569;
+}
+
+/*
+ * Центральная область.
+ */
+.content-panel {
+    -fx-padding: 0 24 24 24;
+}
+
+/*
+ * Заголовок таблицы.
+ */
+.section-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f8fafc;
+}
+
+/*
+ * Счётчик элементов.
+ */
+.count-label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
+
+/*
+ * Таблица.
+ */
+.table-view {
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 10;
+    -fx-border-color: #334155;
+    -fx-border-radius: 10;
+    -fx-border-width: 1;
+}
+
+/*
+ * Заголовки столбцов.
+ */
+.table-view .column-header-background {
+    -fx-background-color: #334155;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-padding: 12;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #e2e8f0;
+    -fx-font-weight: bold;
+}
+
+/*
+ * Строки таблицы.
+ */
+.table-row-cell {
+    -fx-background-color: #1e293b;
+    -fx-cell-size: 42px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #253247;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #075985;
+}
+
+/*
+ * Ячейки.
+ */
+.table-cell {
+    -fx-text-fill: #e2e8f0;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
+}
+
+/*
+ * Фон пустой области таблицы.
+ */
+.table-view .virtual-flow .clipped-container .sheet {
+    -fx-background-color: #1e293b;
+}
+
+/*
+ * Строка состояния.
+ */
+.status-bar {
+    -fx-padding: 12 24;
+    -fx-background-color: #1e293b;
+}
+
+.status-bar .label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 12px;
+}
