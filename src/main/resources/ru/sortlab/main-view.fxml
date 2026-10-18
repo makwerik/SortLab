@@ -77,7 +77,7 @@
                             onAction="#handleGenerate"
                             styleClass="secondary-button"/>
 
-                    <Button text="Загрузить CSV/TXT"
+                    <Button text="Загрузить CSV"
                             onAction="#handleLoadFile"
                             styleClass="secondary-button"/>
 
@@ -141,6 +141,72 @@
 
             </TableView>
         </VBox>
+
+        <!-- Панель визуализации -->
+        <VBox spacing="12"
+              styleClass="visualization-panel">
+
+            <Label text="Визуализация сортировки"
+                   styleClass="section-title"/>
+
+            <!--
+                Контейнер для столбцов.
+                Сам SortingVisualizer добавим
+                программно из контроллера.
+            -->
+            <StackPane fx:id="visualizationContainer"
+                       prefHeight="240"
+                       minHeight="240"/>
+
+            <!-- Управление анимацией -->
+            <HBox spacing="10">
+
+                <Button text="Пауза"
+                        onAction="#handlePauseAnimation"
+                        styleClass="secondary-button"/>
+
+                <Button text="Продолжить"
+                        onAction="#handleResumeAnimation"
+                        styleClass="secondary-button"/>
+
+                <Button text="Сброс"
+                        onAction="#handleResetAnimation"
+                        styleClass="secondary-button"/>
+
+            </HBox>
+
+            <!-- Настройка скорости -->
+            <HBox spacing="10"
+                  alignment="CENTER_LEFT">
+
+                <Label text="Скорость:"
+                       styleClass="field-label"/>
+
+                <Slider fx:id="speedSlider"
+                        min="50"
+                        max="1000"
+                        value="200"
+                        prefWidth="250"/>
+
+                <Label text="Задержка между кадрами (мс)"
+                       styleClass="field-label"/>
+            </HBox>
+
+            <!-- Статистика -->
+            <HBox spacing="20">
+
+                <Label fx:id="comparisonLabel"
+                       text="Сравнения: 0"
+                       styleClass="field-label"/>
+
+                <Label fx:id="swapLabel"
+                       text="Изменения: 0"
+                       styleClass="field-label"/>
+
+            </HBox>
+
+        </VBox>
+
     </center>
 
     <!-- Нижняя строка состояния -->
