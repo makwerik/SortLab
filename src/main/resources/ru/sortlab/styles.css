@@ -214,3 +214,76 @@
     -fx-text-fill: #94a3b8;
     -fx-font-size: 12px;
 }
+
+/*
+ * Панель визуализации.
+ */
+.visualization-panel {
+    -fx-padding: 18;
+    -fx-background-color: #1e293b;
+    -fx-background-radius: 12;
+}
+
+/*
+ * Контейнер столбцов.
+ */
+.visualizer {
+    -fx-alignment: bottom-center;
+    -fx-padding: 10;
+    -fx-background-color: #111827;
+    -fx-background-radius: 10;
+}
+
+/*
+ * Обычный столбец.
+ */
+.sort-bar {
+    -fx-background-color: #475569;
+    -fx-background-radius: 4 4 0 0;
+}
+
+/*
+ * Сравниваемые элементы.
+ */
+.sort-bar-compare {
+    -fx-background-color: #f59e0b;
+}
+
+/*
+ * Изменённые элементы.
+ */
+.sort-bar-update {
+    -fx-background-color: #38bdf8;
+}
+
+/*
+ * Подписи столбцов.
+ */
+.bar-label {
+    -fx-text-fill: #cbd5e1;
+    -fx-font-size: 10px;
+}
+
+/*
+ * Ползунок скорости.
+ */
+.slider .track {
+    -fx-background-color: #334155;
+}
+
+.slider .thumb {
+    -fx-background-color: #0284c7;
+}
+
+/* Модель автомобиля */
+.car-model-label {
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+}
+
+/* Мощность и год выпуска */
+.car-info-label {
+    -fx-text-fill: #94a3b8;
+    -fx-font-size: 10px;
+}

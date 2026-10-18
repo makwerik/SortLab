@@ -22,6 +22,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Comparator;
 
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.Slider;
+
+import ru.sortlab.visualization.*;
+import ru.sortlab.visualization.SortEvent;
+import java.util.List;
+import java.util.function.ToIntFunction;
+
 /**
  * Контроллер главного окна, для обработки действий пользователя
  */
@@ -54,6 +62,33 @@ public class MainController {
 
     @FXML
     private Label statusLabel;
+
+    //Контейнер для визуализатора.
+    @FXML
+    private StackPane visualizationContainer;
+
+    //Слайдер скорости анимации.
+    @FXML
+    private Slider speedSlider;
+
+    //Счётчики операций.
+    @FXML
+    private Label comparisonLabel;
+
+    @FXML
+    private Label swapLabel;
+
+    //Визуальный компонент.
+    private final SortingVisualizer visualizer = new SortingVisualizer();
+
+    //Проигрыватель кадров.
+    private final SortAnimationPlayer animationPlayer = new SortAnimationPlayer();
+
+    //Сервис подготовки кадров.
+    private final SortVisualizationService visualizationService = new SortVisualizationService();
+
+    //Сохранённые кадры последней анимации.
+    private List<SortFrame> animationFrames = List.of();
 
     // собственная коллекция
     private CustomArrayList<Car> cars = new CustomArrayList<>();
@@ -94,6 +129,9 @@ public class MainController {
 
         // столбцам можно использовать доступную ширину таблицы
         carTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        //Добавляем визуализатор в контейнер.
+        visualizationContainer.getChildren().add(visualizer);
 
         refreshTable();
     }
@@ -141,7 +179,7 @@ public class MainController {
         chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV", "*.csv"));
 
         // открыаваем окно выбора файла
-        File file = chooser.showOpenDialog(carTable.getScene().getWindow());
+        File file = chooser.showOpenDialog(null);
 
         if (file == null){
             return;
@@ -230,36 +268,54 @@ public class MainController {
             showError(exception.getMessage());
         }
     }
+
     /**
      * Запуск сортировки.
+     *
+     * Если автомобилей не более 50 и выбрано
+     * числовое поле, запускаем анимацию.
+     *
+     * Для остальных случаев выполняем
+     * обычную сортировку без анимации.
      */
     @FXML
     private void handleSort() {
 
-
         if (cars.isEmpty()) {
-
             showError("Сначала загрузите или создайте автомобили.");
             return;
         }
 
-        // Получаем выбранный алгоритм.
-        SortStrategy<Car> strategy = createStrategy();
+        // Останавливаем предыдущую анимацию.
+        animationPlayer.stop();
 
-        //Получаем выбранное правило сравнения.
-        Comparator<Car> comparator = createComparator();
+        String selectedField = fieldComboBox.getValue();
 
+        // Проверяем, поддерживается ли анимация.
+        boolean canAnimate = cars.getSize() <= 50 && ("Мощность".equals(selectedField) || "Год выпуска".equals(selectedField));
 
-        SortingService<Car> service = new SortingService<>(strategy);
+        if (canAnimate) {
 
-        //Запускаем наш собственный алгоритм.
-        service.sort(cars, comparator);
+            // Запускаем анимацию автоматически.
+            handleStartAnimation();
 
+        } else {
 
-        refreshTable();
+            // Обычная сортировка без анимации.
+            SortStrategy<Car> strategy = createStrategy();
 
-        setStatus("Сортировка завершена: " + algorithmComboBox.getValue() + " по полю " + fieldComboBox.getValue());
+            Comparator<Car> comparator = createComparator();
+
+            SortingService<Car> service = new SortingService<>(strategy);
+
+            service.sort(cars, comparator);
+
+            refreshTable();
+
+            setStatus("Сортировка завершена: " + algorithmComboBox.getValue() + " по полю " + selectedField);
+        }
     }
+
 
     /**
      * Сохранение результата.
@@ -267,32 +323,40 @@ public class MainController {
     @FXML
     private void handleSave() {
 
+        // Проверяем, есть ли автомобили.
         if (cars.isEmpty()) {
-
             showError("Нет автомобилей для сохранения.");
             return;
         }
 
+        // Создаём окно сохранения файла.
         FileChooser chooser = new FileChooser();
 
-        chooser.setTitle("Сохранить результат");
+        chooser.setTitle("Сохранить результат сортировки");
 
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Текстовый файл","*.txt"));
+        // Разрешаем сохранять текстовые файлы.
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Текстовый файл", "*.txt"));
 
+        // Предлагаем имя файла.
         chooser.setInitialFileName("sortlab-results.txt");
 
-        File file = chooser.showSaveDialog(carTable.getScene().getWindow());
+        // Получаем окно приложения через statusLabel.
+        // Не используем carTable, поскольку его getScene()
+        // в текущей конфигурации возвращает null.
+        File file = chooser.showSaveDialog(statusLabel.getScene().getWindow());
 
+        // Пользователь отменил сохранение.
         if (file == null) {
             return;
         }
 
         try {
 
-            // дописываем результаты в файл.
+            // Дописываем результаты сортировки в файл.
+            CarFileWriter.append(file.toPath(), cars, "Результат сортировки SortLab"
+            );
 
-            CarFileWriter.append(file.toPath(), cars,"Результат сортировки SortLab");
-
+            // Показываем успешное сохранение.
             setStatus("Результат сохранён: " + file.getName());
 
         } catch (IOException exception) {
@@ -300,6 +364,7 @@ public class MainController {
             showError("Ошибка сохранения: " + exception.getMessage());
         }
     }
+
 
     /**
      * Создание выбранной стратегии.
@@ -378,4 +443,206 @@ public class MainController {
 
         alert.showAndWait();
     }
+
+
+    /**
+     * Запуск анимации сортировки.
+     */
+    @FXML
+    private void handleStartAnimation() {
+
+        if (cars.isEmpty()) {
+
+            showError(
+                    "Сначала создайте или загрузите автомобили."
+            );
+
+            return;
+        }
+
+        /*
+         * Чтобы интерфейс не перегружался,
+         * ограничиваем число столбцов.
+         *
+         * Большие коллекции продолжают
+         * поддерживаться обычной сортировкой.
+         */
+        if (cars.getSize() > 50) {
+
+            showError(
+                    "Для анимации используйте не более 50 автомобилей."
+            );
+
+            return;
+        }
+
+        /*
+         * Определяем числовое поле,
+         * которое будем визуализировать.
+         */
+        ToIntFunction<Car> valueExtractor;
+
+        String selectedField = fieldComboBox.getValue();
+
+        if ("Мощность".equals(selectedField)) {
+
+            valueExtractor = Car::getPower;
+
+        } else if ("Год выпуска".equals(selectedField)) {
+
+            valueExtractor = Car::getYear;
+
+        } else {
+
+            showError("Анимация доступна только для мощности и года выпуска.");
+
+            return;
+        }
+
+        /*
+         * Создаём наблюдаемый алгоритм.
+         */
+        ObservableSortStrategy<Car> strategy = createObservableStrategy();
+
+        /*
+         * Создаём копию исходной коллекции.
+         *
+         * Это важно: анимация не должна
+         * изменять таблицу до её завершения.
+         */
+        CustomArrayList<Car> copy = new CustomArrayList<>();
+
+        for (Car car : cars) {
+            copy.add(car);
+        }
+
+
+        // Указываем визуализатору выбранное поле.
+        visualizer.setValueExtractor(valueExtractor);
+
+        // Создаём кадры с полными данными автомобилей.
+        animationFrames = visualizationService.createFrames(
+                copy,
+                createComparator(),
+                strategy
+        );
+
+        /*
+         * Сбрасываем статистику.
+         */
+        comparisonLabel.setText("Сравнения: 0");
+        swapLabel.setText("Изменения: 0");
+
+        /*
+         * Счётчики обновляются по мере
+         * воспроизведения кадров.
+         */
+        final int[] comparisons = {0};
+        final int[] updates = {0};
+
+        /*
+         * Запускаем анимацию.
+         */
+
+        animationPlayer.play(animationFrames, speedSlider.getValue(),
+
+                // Обработчик каждого кадра.
+                frame -> {
+
+                    visualizer.showFrame(frame);
+
+                    SortEvent event = frame.event();
+
+                    if (event == null) {
+                        return;
+                    }
+
+                    if (event.type() == SortEvent.Type.COMPARE) {
+                        comparisons[0]++;
+                    } else {
+                        updates[0]++;
+                    }
+
+                    comparisonLabel.setText("Сравнения: " + comparisons[0]);
+
+                    swapLabel.setText("Изменения: " + updates[0]);
+                },
+
+                // Вызывается только после завершения анимации.
+                () -> {
+
+                    // copy уже отсортирован алгоритмом.
+                    cars = copy;
+
+                    // Обновляем таблицу автомобилей.
+                    refreshTable();
+
+                    setStatus("Сортировка завершена: " + algorithmComboBox.getValue() + " по полю " + fieldComboBox.getValue());
+                }
+        );
+
+        setStatus("Анимация сортировки запущена.");
+    }
+
+    /**
+     * Пауза.
+     */
+    @FXML
+    private void handlePauseAnimation() {
+
+        animationPlayer.pause();
+
+        setStatus("Анимация приостановлена.");
+    }
+
+    /**
+     * Продолжение.
+     */
+    @FXML
+    private void handleResumeAnimation() {
+
+        animationPlayer.resume();
+
+        setStatus("Анимация продолжена.");
+    }
+
+    /**
+     * Сброс.
+     */
+    @FXML
+    private void handleResetAnimation() {
+
+        animationPlayer.stop();
+
+        if (!animationFrames.isEmpty()) {
+            visualizer.showFrame(animationFrames.get(0));
+        }
+
+        comparisonLabel.setText("Сравнения: 0");
+        swapLabel.setText("Изменения: 0");
+
+        setStatus("Анимация сброшена.");
+    }
+
+    /**
+     * Создание наблюдаемого алгоритма.
+     */
+    private ObservableSortStrategy<Car>
+    createObservableStrategy() {
+
+        String selected = algorithmComboBox.getValue();
+
+        return switch (selected) {
+
+            case "Insertion Sort" ->
+                    new ObservableInsertionSort<>();
+
+            case "Selection Sort" ->
+                    new ObservableSelectionSort<>();
+
+            default ->
+                    new ObservableBubbleSort<>();
+        };
+    }
+
 }
